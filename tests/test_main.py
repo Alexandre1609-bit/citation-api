@@ -1,13 +1,23 @@
+"""
+Initialisation de l'objet app
+"""
+
 from fastapi.testclient import TestClient
-from app.main import app #On lancera le test depuis la racine avec Pytest, pour éviter me modifier le code avec "os". C'est plus propre ainsi.
+from app.main import app
 
 
 client = TestClient(app)
 
+
 def test_read_root():
+    """
+    Vérifie que l'endpoint racine renvoie le message de bienvenue et un code 200.
+    Cela assure que l'API est en ligne et accessible.
+    """
+
     expected_json = {"message": "Hello World"}
 
-    response = client.get("/") #On simule la reqête sur "/". 
+    response = client.get("/")
 
-    assert response.status_code == 200 #Si code 200, OK.
-    assert response.json() == expected_json #Compare les json pour vérifier.
+    assert response.status_code == 200
+    assert response.json() == expected_json
