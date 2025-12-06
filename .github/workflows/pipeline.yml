@@ -33,11 +33,19 @@ jobs:
     needs: [ quality ]
     runs-on: ubuntu-latest 
     steps:
-      - uses: actions/checkout@v4
-      - name: Pip-audit scan
-        uses: pypa/gh-action-pip-audit@v1.0.0
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          inputs: requirements.txt
+          python-version: '3.13'
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Run security scan
+        run: pip-audit -r requirements.txt
 
   test: 
     name: Unit Tests
