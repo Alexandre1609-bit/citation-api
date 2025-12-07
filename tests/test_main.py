@@ -22,6 +22,7 @@ def test_read_root():
     assert response.status_code == 200
     assert response.json() == expected_json
 
+
 def test_read_quote():
     """
     Vérifié que l'endpoint renvoie le bon message et le bon code.
