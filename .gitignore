@@ -1,0 +1,25 @@
+#Python & Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+#Environnements Virtuels 
+
+venv/
+env/
+.env
+.venv
+
+#Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+#OS 
+.DS_Store
+Thumbs.db

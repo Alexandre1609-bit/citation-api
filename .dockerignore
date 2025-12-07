@@ -1,0 +1,23 @@
+# ignore GIT
+# pas besoin de l'historique des commits
+.git
+.gitignore
+.github
+
+# ignore les fichiers temporaires Python
+__pycache__
+*.pyc
+.pytest_cache
+
+# ignore l'environnement virtuel local 
+# venv Windows ne fonctionnera pas dans le Docker Linux.
+# Docker installe ses propres dépendances via le pip install.
+venv
+.venv
+
+# ignore les Tests et la Doc 
+# En production, on veut juste l'application, pas les tests ni le readme
+tests
+README.md
+Dockerfile
+.dockerignore
