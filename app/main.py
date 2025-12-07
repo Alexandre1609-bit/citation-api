@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 import random
+from app.schemas import Quote
 
 app = FastAPI()
 
@@ -23,7 +24,7 @@ async def root() -> dict:
 
 
 @app.get("/quote")
-async def quote() -> dict:
+async def quote() -> Quote:
     """
     Retourne une citation aléatoire depuis la base de données.
 
