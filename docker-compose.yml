@@ -1,0 +1,9 @@
+services:
+  api:
+   
+    image: ghcr.io/alexandre1609-bit/citation-api:latest
+    
+    ports:
+      - "8000:80"
+    
+    restart: always
