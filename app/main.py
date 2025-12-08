@@ -1,19 +1,21 @@
 """Import"""
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Depends
+from sqlmodel import Session, select
 
-from fastapi import FastAPI
-import random
+from app.database import get_session, create_db_and_tables
 from app.schemas import Quote
 
-app = FastAPI()
+#Lifespan (démarrage auto)
+#S'exécute une seule fois quand je lance l'API
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables() #Crée la table si elle n'existe pas
+    yield #Laisse l'appli tourner
 
-fake_db = [
-    {
-        "citation": "La vie est un mystère qu'il faut vivre, et non un problème à résoudre."
-    },
-    {"citation": "Le plus grand risque est de ne prendre aucun risque."},
-    {"citation": "L'important n'est pas la chute, mais l'atterrissage."},
-]
 
+#On initialise avec le lifespan
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root() -> dict:
@@ -22,14 +24,25 @@ async def root() -> dict:
     """
     return {"message": "Hello World"}
 
+@app.post("/quote")
+async def create_quote(quote: Quote, session: Session = Depends(get_session)) -> Quote:
+    session.add(quote) 
+    session.commit()
+    session.refresh(quote)
+    return quote
 
 @app.get("/quote")
-async def quote() -> Quote:
+#Quote | None car si la bdd est vide, ça renvoie None
+async def quote(session: Session = Depends(get_session)) -> Quote | None:
     """
-    Retourne une citation aléatoire depuis la base de données.
+    Retourne la première citation trouvée dans la base de données.
+    """
+    #Prépare la requête: "SELECT * FROM quote"
+    statement = select(Quote)
 
-    Returns:
-        dict: un dictionnaire contenant la citation.
-    """
-    return random.choice(fake_db)
+    #Execute le statement et on prend le premier résultat
+    result = session.exec(statement).first()
+
+    return result
     # TDD (Test Driven Development) ?
+

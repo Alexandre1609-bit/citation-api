@@ -5,7 +5,6 @@ __pycache__/
 *.pyd
 
 #Environnements Virtuels 
-
 venv/
 env/
 .env
@@ -23,3 +22,7 @@ htmlcov/
 #OS 
 .DS_Store
 Thumbs.db
+
+#DB
+.db
+.sqlite

@@ -1,9 +1,8 @@
-from pydantic import BaseModel
+from sqlmodel import Field, SQLModel
 
-
-class Quote(BaseModel):
+class Quote(SQLModel, table=True):
     """
     Modèle représentant une citation
     """
-
     citation: str
+    id: int | None = Field(default=None, primary_key=True)
