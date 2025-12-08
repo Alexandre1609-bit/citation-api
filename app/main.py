@@ -11,7 +11,8 @@ from app.schemas import Quote
 # Lifespan (démarrage auto)
 # S'exécute une seule fois quand je lance l'API
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_application: FastAPI):
+    """Lance la DB avant que l'application ne se lance"""
     create_db_and_tables()  # Crée la table si elle n'existe pas
     yield  # Laisse l'appli tourner
 
@@ -30,6 +31,7 @@ async def root() -> dict:
 
 @app.post("/quote")
 async def create_quote(quote: Quote, session: Session = Depends(get_session)) -> Quote:
+    """On crée et commit quote"""
     session.add(quote)
     session.commit()
     session.refresh(quote)
@@ -37,8 +39,7 @@ async def create_quote(quote: Quote, session: Session = Depends(get_session)) ->
 
 
 @app.get("/quote")
-# Quote | None car si la bdd est vide, ça renvoie None
-async def quote(session: Session = Depends(get_session)) -> Quote | None:
+async def get_quote(session: Session = Depends(get_session)) -> Quote | None:
     """
     Retourne la première citation trouvée dans la base de données.
     """
