@@ -1,12 +1,12 @@
 """
 Initialisation de l'objet app
 """
+
 from fastapi.testclient import TestClient
 from sqlmodel import SQLModel
 import pytest
 from app.main import app
 from app.database import ENGINE
-
 
 
 # Fixture : Une Fixture est une fonction de préparation qui s'exécute avant chaque test
