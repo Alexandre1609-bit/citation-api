@@ -9,18 +9,6 @@ from app.main import app
 from app.database import ENGINE
 
 
-# Fixture : Une Fixture est une fonction de préparation qui s'exécute avant chaque test
-# pour "mettre la table" (créer la BDD, préparer le client).
-@pytest.fixture(name="client")
-def client_fixture():
-    """
-    Prépare la base de donnée pour les test
-    """
-    # Force la création des tables pour le test
-    SQLModel.metadata.create_all(ENGINE)
-    return TestClient(app)
-
-
 def test_read_root(client):
     """
     Vérifie que l'endpoint racine renvoie le message de bienvenue et un code 200.
@@ -53,3 +41,14 @@ def test_create_quote(client):
     assert data["citation"] == "Omelette du fromage"
     assert "id" in data
     assert data["id"] is not None
+
+
+def test_read_quote_empty(client):
+    response = client.get("/quote")
+
+    print(f"DEBUG RESPONSE: {response.json()}")
+    assert response.status_code == 404
+
+    data = response.json()
+    assert "detail" in data
+    assert data["detail"] == "No quote found"

@@ -1,7 +1,7 @@
 """Import"""
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlmodel import Session, select
 
 from app.database import get_session, create_db_and_tables
@@ -18,6 +18,7 @@ async def lifespan(_application: FastAPI):
 
 
 # On initialise avec le lifespan
+# Crée les tables si elles n'existent pas encore
 app = FastAPI(lifespan=lifespan)
 
 
@@ -48,6 +49,8 @@ async def get_quote(session: Session = Depends(get_session)) -> Quote | None:
 
     # Execute le statement et on prend le premier résultat
     result = session.exec(statement).first()
+    if not result:
+        raise HTTPException(status_code=404, detail="No quote found")
 
     return result
     # TDD (Test Driven Development) ?
